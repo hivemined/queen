@@ -1,1 +1,1 @@
-__all__ = ['container', 'exception', 'worker']
+__all__ = ['container', 'exception']
