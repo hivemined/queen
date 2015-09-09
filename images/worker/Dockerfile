@@ -1,6 +1,9 @@
 FROM hivemined/jre
 MAINTAINER "Ryan - faceless.saint@gmail.com"
 
+# label for use with Hivemined
+LABEL hivemined.worker
+
 #setup static file structure
 ADD ["src/skel.tgz", "/"]
 
