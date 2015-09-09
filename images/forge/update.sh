@@ -60,8 +60,9 @@ if [ "$OLD_VERSION" != "$FORGE_VERSION" ] || [ "$2" = --force ]; then
     #update git repository with new tag
     if [ $__ENABLE_GIT = 1 ]; then
         git add README.md Dockerfile src/
-        git commit -m "Update to $FORGE_VERSION" && git tag "$FORGE_VERSION" && git push && git push origin "$FORGE_VERSION"
+        git commit -m "Update forge image to $FORGE_VERSION" && \
+		git tag "$FORGE_VERSION" && git push && git push origin "$FORGE_VERSION"
     fi
 else
-    echo "Already up to date! Staying at version $OLD_VERSION"
+    echo "Forge image already up to date! Staying at version $OLD_VERSION"
 fi
