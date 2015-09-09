@@ -55,6 +55,8 @@ class Image:
             else:
                 build_tag = self.name
             Docker.build(self.path, build_tag, quiet=True)
+            if not self.exists():
+                Docker.pull(self.name, self.tag)
         else:
             Docker.pull(self.name, self.tag)
         if not self.exists():

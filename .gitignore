@@ -1,3 +1,5 @@
-images/worker/*
-images/drone/*
+images/worker
+images/drone
+images/minecraft
+images/forge
 .idea

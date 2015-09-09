@@ -1,5 +1,4 @@
-#!/bin/bash
-
-cid_data = docker create --label Managed=Hivemined-Queen -v /var/hivemined/ scratch true
-docker run --pull -it --privileged --volumes-from cid_data -v /var/run/docker.sock:/var/run/docker.sock \
-    -v /var/lib/docker/:/var/lib/docker
+#!/bin/sh
+docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock --volumes-from \
+	$(docker create --name hivemined-data --label hivemined.data -v /var/hivemined busybox true) \
+	-it --name hivemined-queen --label hivemined.queen hivemined/queen $@

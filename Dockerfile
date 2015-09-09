@@ -3,8 +3,10 @@ MAINTAINER "Ryan - faceless.saint@gmail.com"
 
 LABEL hivemined.queen
 
+# Copy run scripts
 COPY ["src", "/usr/local/bin/"]
 
-COPY ["src/images", "/usr/local/src"]
+# Copy source directories for child images
+COPY ["images", "/usr/local/src/"]
 
 ENTRYPOINT ["/usr/local/bin/main.py"]

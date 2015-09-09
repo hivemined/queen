@@ -1,0 +1,11 @@
+.git
+.gitignore
+.dockerignore
+Dockerfile
+README.md
+LICENSE
+
+images/worker/.git
+images/drone/.git
+images/minecraft/.git
+images/forge/.git
