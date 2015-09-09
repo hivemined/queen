@@ -10,6 +10,7 @@ class Image:
         self.name = name
         self.tag = tag
         self.path = path
+        self.get()
 
     @staticmethod
     def clean(force=False):
@@ -18,7 +19,10 @@ class Image:
             Docker.remove_image(image=image, force=force)
 
     def list(self, quiet=False):
-        """List all images under the repository."""
+        """List all images under the repository.
+
+        :param quiet: Whether to output a list of dicts or strings.
+        """
         return Docker.images(name=self.name, quiet=quiet)
 
     def exists(self):
@@ -26,21 +30,30 @@ class Image:
         if not self.name:
             return False
         images = self.list()
-        if images and not self.tag:
-            return True
-        elif next((i for i in images[0].get('RepoTags') if i == self.tag), None):
-            return True
-        else:
-            return False
+        if images:
+            if not self.tag:
+                return True
+            else:
+                for i in images:
+                    if next((True for t in i.get('RepoTags') if t == self.tag), False):
+                        return True
+                # next((True for i in images[0].get('RepoTags') if i == self.tag), False)
+        return False
 
-    def get(self):
-        """Get the image from the repository, or build it if self.path is specified."""
-        if not self.name:
-            raise ValueError('Invalid name parameter.', self.name)
-        if self.exists():
+    def get(self, update=False):
+        """Get the image from the repository, or build it if self.path is specified.
+
+        Raise LookupError if the image cannot be built or pulled.
+
+        :param update: Whether to pull/build even if the image already exists.
+        """
+        if self.exists() and not update:
             return
         elif self.path:
-            build_tag = self.name + ':' + self.tag
+            if self.tag:
+                build_tag = self.name + ':' + self.tag
+            else:
+                build_tag = self.name
             Docker.build(self.path, build_tag, quiet=True)
         else:
             Docker.pull(self.name, self.tag)

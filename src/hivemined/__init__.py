@@ -10,17 +10,5 @@ __author__ = 'Ryan Clarke - faceless.saint@gmail.com'
 
 
 def __main__():
-    d = Docker
-    d.version()
-
-    i = Image(None)
-    c = Container(None, i, '')
-    c.start()
-
-    comb = Comb(None, i)
-    w = Worker(None, comb)
-    w.start()
-
-    d = Drone(None, '')
-    d.start()
+    """Hivemined library test suite"""
     pass
