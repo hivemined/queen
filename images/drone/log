@@ -1,0 +1,9 @@
+#!/bin/sh
+
+LOG_DIR='/mnt/minecraft-var/logs'
+
+#tasks?
+#   view logs
+#   rotate logs
+#   copy logs
+#   other tasks?

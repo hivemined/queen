@@ -1,0 +1,226 @@
+Installing server to current directory
+MESSAGE: Data kindly mirrored by Minecraft Forge at http://files.minecraftforge.net/
+MESSAGE: Considering minecraft server jar
+MESSAGE: Downloading minecraft server version 1.7.10
+  ETag: 3e8912b293b52bd54f879919bd6e4e44
+  MD5:  3e8912b293b52bd54f879919bd6e4e44
+MESSAGE: Considering library net.minecraftforge:forge:1.7.10-10.13.4.1448-1.7.10: Not Downloading
+MESSAGE: Considering library net.minecraft:launchwrapper:1.11
+MESSAGE: Downloading library net.minecraft:launchwrapper:1.11
+java.io.IOException: Server returned HTTP response code: 403 for URL: https://libraries.minecraft.net/net/minecraft/launchwrapper/1.11/launchwrapper-1.11.jar.pack.xz
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1627)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
+	at net.minecraftforge.installer.DownloadUtils$URLISSupplier.getInput(DownloadUtils.java:428)
+	at net.minecraftforge.installer.DownloadUtils$URLISSupplier.getInput(DownloadUtils.java:416)
+	at com.google.common.io.ByteStreams$6.openStream(ByteStreams.java:989)
+	at com.google.common.io.ByteSource.copyTo(ByteSource.java:202)
+	at com.google.common.io.Files.copy(Files.java:382)
+	at net.minecraftforge.installer.DownloadUtils.downloadFile(DownloadUtils.java:374)
+	at net.minecraftforge.installer.DownloadUtils.downloadInstalledLibraries(DownloadUtils.java:84)
+	at net.minecraftforge.installer.ServerInstall.run(ServerInstall.java:72)
+	at net.minecraftforge.installer.InstallerAction.run(InstallerAction.java:42)
+	at net.minecraftforge.installer.SimpleInstaller.handleOptions(SimpleInstaller.java:61)
+	at net.minecraftforge.installer.SimpleInstaller.main(SimpleInstaller.java:36)
+MESSAGE: Considering library org.ow2.asm:asm-all:5.0.3
+MESSAGE: Downloading library org.ow2.asm:asm-all:5.0.3
+java.io.IOException: Server returned HTTP response code: 403 for URL: https://libraries.minecraft.net/org/ow2/asm/asm-all/5.0.3/asm-all-5.0.3.jar.pack.xz
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1627)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
+	at net.minecraftforge.installer.DownloadUtils$URLISSupplier.getInput(DownloadUtils.java:428)
+	at net.minecraftforge.installer.DownloadUtils$URLISSupplier.getInput(DownloadUtils.java:416)
+	at com.google.common.io.ByteStreams$6.openStream(ByteStreams.java:989)
+	at com.google.common.io.ByteSource.copyTo(ByteSource.java:202)
+	at com.google.common.io.Files.copy(Files.java:382)
+	at net.minecraftforge.installer.DownloadUtils.downloadFile(DownloadUtils.java:374)
+	at net.minecraftforge.installer.DownloadUtils.downloadInstalledLibraries(DownloadUtils.java:84)
+	at net.minecraftforge.installer.ServerInstall.run(ServerInstall.java:72)
+	at net.minecraftforge.installer.InstallerAction.run(InstallerAction.java:42)
+	at net.minecraftforge.installer.SimpleInstaller.handleOptions(SimpleInstaller.java:61)
+	at net.minecraftforge.installer.SimpleInstaller.main(SimpleInstaller.java:36)
+MESSAGE: Considering library com.typesafe.akka:akka-actor_2.11:2.3.3
+MESSAGE: Downloading library com.typesafe.akka:akka-actor_2.11:2.3.3
+MESSAGE: Unpacking packed file akka-actor_2.11-2.3.3.jar.pack.xz
+  Signed
+  Checksum Length: 140942
+  Total Length:    2606968
+  Temp File:       /tmp/art5492372377467704328.pack
+MESSAGE: Successfully unpacked packed file akka-actor_2.11-2.3.3.jar.pack.xz
+Checking "/home/ryan/Projects/hivemined/forge/src/./libraries/com/typesafe/akka/akka-actor_2.11/2.3.3/akka-actor_2.11-2.3.3.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library com.typesafe:config:1.2.1
+MESSAGE: Downloading library com.typesafe:config:1.2.1
+MESSAGE: Unpacking packed file config-1.2.1.jar.pack.xz
+  Signed
+  Checksum Length: 12246
+  Total Length:    111476
+  Temp File:       /tmp/art5381311058130214467.pack
+MESSAGE: Successfully unpacked packed file config-1.2.1.jar.pack.xz
+Checking "/home/ryan/Projects/hivemined/forge/src/./libraries/com/typesafe/config/1.2.1/config-1.2.1.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang:scala-actors-migration_2.11:1.1.0
+MESSAGE: Downloading library org.scala-lang:scala-actors-migration_2.11:1.1.0
+MESSAGE: Unpacking packed file scala-actors-migration_2.11-1.1.0.jar.pack.xz
+  Signed
+  Checksum Length: 3311
+  Total Length:    52481
+  Temp File:       /tmp/art8389913210044942354.pack
+MESSAGE: Successfully unpacked packed file scala-actors-migration_2.11-1.1.0.jar.pack.xz
+Checking "/home/ryan/Projects/hivemined/forge/src/./libraries/org/scala-lang/scala-actors-migration_2.11/1.1.0/scala-actors-migration_2.11-1.1.0.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang:scala-compiler:2.11.1
+MESSAGE: Downloading library org.scala-lang:scala-compiler:2.11.1
+MESSAGE: Unpacking packed file scala-compiler-2.11.1.jar.pack.xz
+  Signed
+  Checksum Length: 942120
+  Total Length:    9183051
+  Temp File:       /tmp/art7505031586824594926.pack
+MESSAGE: Successfully unpacked packed file scala-compiler-2.11.1.jar.pack.xz
+Checking "/home/ryan/Projects/hivemined/forge/src/./libraries/org/scala-lang/scala-compiler/2.11.1/scala-compiler-2.11.1.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang.plugins:scala-continuations-library_2.11:1.0.2
+MESSAGE: Downloading library org.scala-lang.plugins:scala-continuations-library_2.11:1.0.2
+MESSAGE: Unpacking packed file scala-continuations-library_2.11-1.0.2.jar.pack.xz
+  Signed
+  Checksum Length: 2416
+  Total Length:    18871
+  Temp File:       /tmp/art7574855097805443901.pack
+MESSAGE: Successfully unpacked packed file scala-continuations-library_2.11-1.0.2.jar.pack.xz
+Checking "/home/ryan/Projects/hivemined/forge/src/./libraries/org/scala-lang/plugins/scala-continuations-library_2.11/1.0.2/scala-continuations-library_2.11-1.0.2.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang.plugins:scala-continuations-plugin_2.11.1:1.0.2
+MESSAGE: Downloading library org.scala-lang.plugins:scala-continuations-plugin_2.11.1:1.0.2
+MESSAGE: Unpacking packed file scala-continuations-plugin_2.11.1-1.0.2.jar.pack.xz
+  Signed
+  Checksum Length: 16815
+  Total Length:    139418
+  Temp File:       /tmp/art1776856120578941754.pack
+MESSAGE: Successfully unpacked packed file scala-continuations-plugin_2.11.1-1.0.2.jar.pack.xz
+Checking "/home/ryan/Projects/hivemined/forge/src/./libraries/org/scala-lang/plugins/scala-continuations-plugin_2.11.1/1.0.2/scala-continuations-plugin_2.11.1-1.0.2.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang:scala-library:2.11.1
+MESSAGE: Downloading library org.scala-lang:scala-library:2.11.1
+MESSAGE: Unpacking packed file scala-library-2.11.1.jar.pack.xz
+  Signed
+  Checksum Length: 341368
+  Total Length:    5984083
+  Temp File:       /tmp/art7460857584615272248.pack
+MESSAGE: Successfully unpacked packed file scala-library-2.11.1.jar.pack.xz
+Checking "/home/ryan/Projects/hivemined/forge/src/./libraries/org/scala-lang/scala-library/2.11.1/scala-library-2.11.1.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang:scala-parser-combinators_2.11:1.0.1
+MESSAGE: Downloading library org.scala-lang:scala-parser-combinators_2.11:1.0.1
+MESSAGE: Unpacking packed file scala-parser-combinators_2.11-1.0.1.jar.pack.xz
+  Signed
+  Checksum Length: 37614
+  Total Length:    273457
+  Temp File:       /tmp/art2880266341714070983.pack
+MESSAGE: Successfully unpacked packed file scala-parser-combinators_2.11-1.0.1.jar.pack.xz
+Checking "/home/ryan/Projects/hivemined/forge/src/./libraries/org/scala-lang/scala-parser-combinators_2.11/1.0.1/scala-parser-combinators_2.11-1.0.1.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang:scala-reflect:2.11.1
+MESSAGE: Downloading library org.scala-lang:scala-reflect:2.11.1
+MESSAGE: Unpacking packed file scala-reflect-2.11.1.jar.pack.xz
+  Signed
+  Checksum Length: 291610
+  Total Length:    3217021
+  Temp File:       /tmp/art2326928970657667505.pack
+MESSAGE: Successfully unpacked packed file scala-reflect-2.11.1.jar.pack.xz
+Checking "/home/ryan/Projects/hivemined/forge/src/./libraries/org/scala-lang/scala-reflect/2.11.1/scala-reflect-2.11.1.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang:scala-swing_2.11:1.0.1
+MESSAGE: Downloading library org.scala-lang:scala-swing_2.11:1.0.1
+MESSAGE: Unpacking packed file scala-swing_2.11-1.0.1.jar.pack.xz
+  Signed
+  Checksum Length: 39019
+  Total Length:    888907
+  Temp File:       /tmp/art6408611575612931971.pack
+MESSAGE: Successfully unpacked packed file scala-swing_2.11-1.0.1.jar.pack.xz
+Checking "/home/ryan/Projects/hivemined/forge/src/./libraries/org/scala-lang/scala-swing_2.11/1.0.1/scala-swing_2.11-1.0.1.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang:scala-xml_2.11:1.0.2
+MESSAGE: Downloading library org.scala-lang:scala-xml_2.11:1.0.2
+MESSAGE: Unpacking packed file scala-xml_2.11-1.0.2.jar.pack.xz
+  Signed
+  Checksum Length: 35380
+  Total Length:    739509
+  Temp File:       /tmp/art3406779626159086167.pack
+MESSAGE: Successfully unpacked packed file scala-xml_2.11-1.0.2.jar.pack.xz
+Checking "/home/ryan/Projects/hivemined/forge/src/./libraries/org/scala-lang/scala-xml_2.11/1.0.2/scala-xml_2.11-1.0.2.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library lzma:lzma:0.0.1
+MESSAGE: Downloading library lzma:lzma:0.0.1
+java.io.IOException: Server returned HTTP response code: 403 for URL: https://libraries.minecraft.net/lzma/lzma/0.0.1/lzma-0.0.1.jar.pack.xz
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1627)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
+	at net.minecraftforge.installer.DownloadUtils$URLISSupplier.getInput(DownloadUtils.java:428)
+	at net.minecraftforge.installer.DownloadUtils$URLISSupplier.getInput(DownloadUtils.java:416)
+	at com.google.common.io.ByteStreams$6.openStream(ByteStreams.java:989)
+	at com.google.common.io.ByteSource.copyTo(ByteSource.java:202)
+	at com.google.common.io.Files.copy(Files.java:382)
+	at net.minecraftforge.installer.DownloadUtils.downloadFile(DownloadUtils.java:374)
+	at net.minecraftforge.installer.DownloadUtils.downloadInstalledLibraries(DownloadUtils.java:84)
+	at net.minecraftforge.installer.ServerInstall.run(ServerInstall.java:72)
+	at net.minecraftforge.installer.InstallerAction.run(InstallerAction.java:42)
+	at net.minecraftforge.installer.SimpleInstaller.handleOptions(SimpleInstaller.java:61)
+	at net.minecraftforge.installer.SimpleInstaller.main(SimpleInstaller.java:36)
+MESSAGE: Considering library net.sf.jopt-simple:jopt-simple:4.5
+MESSAGE: Downloading library net.sf.jopt-simple:jopt-simple:4.5
+java.io.IOException: Server returned HTTP response code: 403 for URL: https://libraries.minecraft.net/net/sf/jopt-simple/jopt-simple/4.5/jopt-simple-4.5.jar.pack.xz
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1627)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
+	at net.minecraftforge.installer.DownloadUtils$URLISSupplier.getInput(DownloadUtils.java:428)
+	at net.minecraftforge.installer.DownloadUtils$URLISSupplier.getInput(DownloadUtils.java:416)
+	at com.google.common.io.ByteStreams$6.openStream(ByteStreams.java:989)
+	at com.google.common.io.ByteSource.copyTo(ByteSource.java:202)
+	at com.google.common.io.Files.copy(Files.java:382)
+	at net.minecraftforge.installer.DownloadUtils.downloadFile(DownloadUtils.java:374)
+	at net.minecraftforge.installer.DownloadUtils.downloadInstalledLibraries(DownloadUtils.java:84)
+	at net.minecraftforge.installer.ServerInstall.run(ServerInstall.java:72)
+	at net.minecraftforge.installer.InstallerAction.run(InstallerAction.java:42)
+	at net.minecraftforge.installer.SimpleInstaller.handleOptions(SimpleInstaller.java:61)
+	at net.minecraftforge.installer.SimpleInstaller.main(SimpleInstaller.java:36)
+MESSAGE: Considering library com.google.guava:guava:17.0
+MESSAGE: Downloading library com.google.guava:guava:17.0
+java.io.IOException: Server returned HTTP response code: 403 for URL: https://libraries.minecraft.net/com/google/guava/guava/17.0/guava-17.0.jar.pack.xz
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1627)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
+	at net.minecraftforge.installer.DownloadUtils$URLISSupplier.getInput(DownloadUtils.java:428)
+	at net.minecraftforge.installer.DownloadUtils$URLISSupplier.getInput(DownloadUtils.java:416)
+	at com.google.common.io.ByteStreams$6.openStream(ByteStreams.java:989)
+	at com.google.common.io.ByteSource.copyTo(ByteSource.java:202)
+	at com.google.common.io.Files.copy(Files.java:382)
+	at net.minecraftforge.installer.DownloadUtils.downloadFile(DownloadUtils.java:374)
+	at net.minecraftforge.installer.DownloadUtils.downloadInstalledLibraries(DownloadUtils.java:84)
+	at net.minecraftforge.installer.ServerInstall.run(ServerInstall.java:72)
+	at net.minecraftforge.installer.InstallerAction.run(InstallerAction.java:42)
+	at net.minecraftforge.installer.SimpleInstaller.handleOptions(SimpleInstaller.java:61)
+	at net.minecraftforge.installer.SimpleInstaller.main(SimpleInstaller.java:36)
+MESSAGE: Considering library org.apache.commons:commons-lang3:3.3.2
+MESSAGE: Downloading library org.apache.commons:commons-lang3:3.3.2
+java.io.IOException: Server returned HTTP response code: 403 for URL: https://libraries.minecraft.net/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar.pack.xz
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1627)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
+	at net.minecraftforge.installer.DownloadUtils$URLISSupplier.getInput(DownloadUtils.java:428)
+	at net.minecraftforge.installer.DownloadUtils$URLISSupplier.getInput(DownloadUtils.java:416)
+	at com.google.common.io.ByteStreams$6.openStream(ByteStreams.java:989)
+	at com.google.common.io.ByteSource.copyTo(ByteSource.java:202)
+	at com.google.common.io.Files.copy(Files.java:382)
+	at net.minecraftforge.installer.DownloadUtils.downloadFile(DownloadUtils.java:374)
+	at net.minecraftforge.installer.DownloadUtils.downloadInstalledLibraries(DownloadUtils.java:84)
+	at net.minecraftforge.installer.ServerInstall.run(ServerInstall.java:72)
+	at net.minecraftforge.installer.InstallerAction.run(InstallerAction.java:42)
+	at net.minecraftforge.installer.SimpleInstaller.handleOptions(SimpleInstaller.java:61)
+	at net.minecraftforge.installer.SimpleInstaller.main(SimpleInstaller.java:36)
+The server installed successfully, you should now be able to run the file forge-1.7.10-10.13.4.1448-1.7.10-universal.jar
+You can delete this installer file now if you wish

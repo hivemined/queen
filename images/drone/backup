@@ -1,0 +1,358 @@
+#!/bin/sh
+
+# volumes mounted from worker
+ETC_DIR='/mnt/minecraft-etc'
+VAR_DIR='/mnt/minecraft-var'
+
+# volumes mounted from queen
+BAK_DIR='/opt/queen/archive'
+
+# max number of backups to keep. set to < 0 for unlimited
+MAX_DAILY=7
+MAX_WEEKLY=4
+MAX_MONTHLY=12
+
+# main program logic
+__main__ () {
+    archive_exists "$1" || [ "$2" = init ] || {
+        error "Worker '$1' does not exist!"
+        return 1
+    }
+    case "$2" in
+        init)
+            init_archive "$1"
+            ;;
+        list)
+            list_backups "$1"
+            ;;
+        update)
+            update_archive "$1" "$3"
+            ;;
+        restore)
+            restore_backup "$1" "$3"
+            ;;
+        delete)
+            delete_backup "$1" "$3"
+            ;;
+        *)
+            echo 'Usage: '
+            echo "  $0 <name> init"
+            echo "  $0 <name> list"
+            echo "  $0 <name> update ['--force']"
+            echo "  $0 <name> restore [backup-name]"
+            echo "  $0 <name> delete [backup-name]"
+            ;;
+    esac
+}
+
+error () {
+    echo "$@" >&2
+}
+
+enter_dir () {
+    pushd "$1" &>/dev/null || {
+        error "Cannot enter directory: '$1'"
+        return 1
+    }
+}
+
+leave_dir () {
+    popd &>/dev/null
+}
+
+# check the existence of archive for the named worker
+archive_exists () {
+    test -d "${BAK_DIR}/$1" || {
+        error 'Specified worker does not have an archive directory!'
+        return 1
+    }
+}
+
+# list available backups for the named worker
+list_backups () {
+    archive_exists "$1" || return 1
+    local dir="${BAK_DIR}/$1"
+
+    echo '---- Daily Backups   ----'
+    test -d "${dir}/daily" && ls -1t "${dir}/daily"
+
+    echo '---- Weekly Backups  ----'
+    test -d "${dir}/weekly" && ls -1t "${dir}/weekly"
+
+    echo '---- Monthly Backups ----'
+    test -d "${dir}/monthly" && ls -1t "${dir}/monthly"
+}
+
+# rotate backup files to save disk space
+__rotate_archive () {
+    archive_exists "$1" || return 1
+    local dir="${BAK_DIR}/$1"
+
+    echo -n "Rotating logs for worker '$1' ... "
+
+    # delete old daily backups
+    if [ -d daily ] && [ $MAX_DAILY -gt 0 ]; then
+        enter_dir "${dir}/daily" && {
+            rm -rf $(ls -1Qt | tail -n +$(($MAX_DAILY + 1)))
+            leave_dir
+        }
+    fi
+
+    # delete old weekly backups
+    if [ -d weekly ] && [ $MAX_WEEKLY -gt 0 ]; then
+        enter_dir "${dir}/weekly" && {
+            rm -rf $(ls -1Qt | tail -n +$(($MAX_WEEKLY + 1)))
+            leave_dir
+        }
+    fi
+
+    # delete old monthly backups
+    if [ -d monthly ] && [ $MAX_MONTHLY -gt 0 ]; then
+        enter_dir "${dir}/monthly" && {
+            rm -rf $(ls -1Qt | tail -n +$(($MAX_MONTHLY + 1)))
+            leave_dir
+        }
+    fi
+
+    echo "Done."
+}
+
+# update all archive directories
+update_archive () {
+    archive_exists "$1" || return 1
+
+    local date=$(date)
+
+    [ "$3" = --force ] && __new_manual_backup "$1" "$date"
+
+    __new_daily_backup "$1" "$date"
+    __new_weekly_backup "$1"
+    __new_monthly_backup "$1"
+    __rotate_archive "$1"
+}
+
+##
+# Create a new daily backup.
+#   params: name [date]
+#   return: status
+#     0 - new backup created
+#     1 - existing backups up to date
+#     2 - backup creation failure
+##
+__new_daily_backup () {
+    local dir="${BAK_DIR}/$1"
+    enter_dir "$dir" || return 1
+
+    # retrieve date information
+    if date -d "$2" &>/dev/null; then
+        local date_full="$2"
+    else
+        local date_full=$(date)
+    fi
+    local label=$(date -d "$date_full" +%F_%T)
+
+    # ensure daily archive directory exists
+    mkdir -p daily
+
+    # new daily backup is not needed if a backup was made earlier today
+    if find daily -maxdepth 1 -daystart -mtime 0 | grep -q .; then
+        echo 'Daily backups are already up to date.'
+        local RET_VAL=1
+
+    else
+        # attempt to create new backup
+        __create_backup "${dir}/daily/${label}"
+        if [ $? -eq 0 ]; then
+            echo "Created new daily backup: $label"
+            local RET_VAL=0
+        else
+            error 'Failed to create daily backup!'
+            local RET_VAL=2
+        fi
+    fi
+    leave_dir
+    return $RET_VAL
+}
+
+##
+# Convert the oldest daily backup into a weekly backup.
+#   params: name
+#   return: status
+#     0 - backup copied
+#     1 - existing backups up to date
+#     2 - backup copy failure
+##
+__new_weekly_backup () {
+    local dir="${BAK_DIR}/$1"
+    enter_dir "$dir" || return 1
+
+    # ensure daily and weekly archive directories exist
+    mkdir -p daily weekly
+
+    # new weekly backup is not needed if latest is earlier than this
+    local age=$(( $MAX_DAILY * 14 ))
+    if find weekly -maxdepth 1 -daystart -mtime -$age | grep -q .; then
+        echo 'Weekly backups are already up to date.'
+        local RET_VAL=1
+    else
+        # attempt to copy backup to weekly archive
+        oldest_daily=$(ls -1Qt daily | tail -n 1)
+        __roll_backup "daily/$oldest_daily" "${dir}/weekly"
+        if [ $? -eq 0 ]; then
+            echo "Moved to weekly backups: $oldest_daily"
+            local RET_VAL=0
+        else
+            error 'Failed to move to weekly backups!'
+            local RET_VAL=2
+        fi
+    fi
+    leave_dir
+    return $RET_VAL
+}
+
+##
+# Convert the oldest weekly backup into a monthly backup.
+#   params: name
+#   return: status
+#     0 - backup copied
+#     1 - existing backups up to date
+#     2 - backup copy failure
+##
+__new_monthly_backup () {
+    local dir="${BAK_DIR}/$1"
+    enter_dir "$dir" || return 1
+
+    # ensure weekly and monthly archive directories exist
+    mkdir -p weekly monthly
+
+    # new monthly backup is not needed if latest is earlier than this
+    local age=$(( $MAX_WEEKLY * 56 ))
+    if find monthly -maxdepth 1 -daystart -mtime -$age | grep -q .; then
+        echo 'Monthly backups are already up to date.'
+        local RET_VAL=1
+    else
+        # attempt to copy backup to monthly archive
+        oldest_weekly=$(ls -1Qt weekly | tail -n 1)
+        cp "weekly/$oldest_weekly" monthly/
+        if [ $? -eq 0 ]; then
+            echo "Moved to monthly backups: $oldest_weekly"
+            local RET_VAL=0
+        else
+            error 'Failed to move to monthly backups!'
+            local RET_VAL=2
+        fi
+    fi
+    leave_dir
+    return $RET_VAL
+}
+
+# create a new manual backup
+__new_manual_backup () {
+    local dir="${BAK_DIR}/$1"
+    enter_dir "$dir" || return 1
+
+    # retrieve date information
+    if date -d "$2" &>/dev/null; then
+        local date_full="$2"
+    else
+        local date_full=$(date)
+    fi
+    local label=$(date -d "$date_full" +%F_%T)
+
+    # ensure manual archive directory exists
+    mkdir -p manual
+
+    # attempt to create new backup
+    __create_backup "${dir}/manual/${label}"
+    if [ $? -eq 0 ]; then
+        echo "Created new manual backup: $label"
+        local RET_VAL=0
+    else
+        error 'Failed to create manual backup!'
+        local RET_VAL=2
+    fi
+
+    leave_dir
+    return $RET_VAL
+}
+
+# create new backup with the given name
+__create_backup () {
+    mkdir -p "$1"
+    rsync -a "$ETC_DIR" "${1}/etc"
+    rsync -a "$VAR_DIR" "${1}/var"
+}
+
+# roll directory backup into compressed archive
+__roll_backup () {
+    enter_dir "$1" || return 1
+    tar -cJf "${2}/$(basename $1).txz" etc var &>/dev/null
+    leave_dir
+}
+
+# select a backup to restore to the named worker
+restore_backup () {
+    archive_exists "$1" || return 1
+    local dir="${BACK_DIR}/$1"
+
+    enter_dir "$dir" || return 1
+
+    local bak_file=""
+    if [ -e "$2" ]; then    # use specified backup
+        bak_file="$2"
+    else                    # select from available backups
+        list_backups "$1"
+        until [ -e "$bak_file" ]; do
+            read -p 'Select backup: ' bak_file
+            if [ "$bak_file" = latest ]; then
+                bak_file="daily/$(ls -1t daily | head -n 1)"
+            fi
+        done
+    fi
+
+    __restore "${dir}/$bak_file" || return 1
+
+    leave_dir
+}
+__restore () {
+    enter_dir '/' || return 1
+    tar -xf "$1"
+    leave_dir
+
+    #   rsync -a "${1}/etc/" "$ETC_DIR"
+    #   rsync -a "${1}/var/" "$VAR_DIR"
+    #
+    #
+}
+
+# select a backup to delete
+delete_backup () {
+    archive_exists "$1" || return 1
+    local dir="${BAK_DIR}/$1"
+
+    enter_dir "$dir" || return 1
+
+    local bak_file=""
+    if [ -e "$2" ]; then    # delete the specified backup
+        bak_file="$2"
+    else                    # select from available backups
+        list_backups "$1"
+        until [ -e "$bak_file" ]; do
+            read -p 'Select backup: ' bak_file
+        done
+    fi
+
+    __delete "bak_file" || return 1
+
+    leave_dir
+}
+__delete () {
+    rm -rf "$1"
+}
+
+# intialize archive directory
+init_archive () {
+    mkdir -p "${BAK_DIR}/$1"
+}
+
+__main__ "$@"

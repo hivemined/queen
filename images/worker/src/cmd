@@ -1,0 +1,11 @@
+#!/bin/sh
+##
+# Command injection script for interacting with the server.
+#   usage: "docker exec <drone_name> cmd <command>"
+##
+
+# configuration and function definitions
+. /usr/local/etc/entrypoint.conf
+
+# pass command to server's fifo input stream
+send_cmd "$@"

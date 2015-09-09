@@ -1,0 +1,14 @@
+if today is [new day]
+	create new daily backup
+	
+	if today is [start of week]
+		copy oldest daily backup to weekly
+	
+	if today is [start of month]
+		copy oldest weekly backup to monthly
+
+	clean old backups
+
+max_daily --> even multiple of 7 - weeks to keep as daily
+max_weekly --> even multiple of 4 - months to keep as weekly
+max_monthly --> any number, defualts to 1yr

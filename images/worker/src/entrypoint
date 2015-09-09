@@ -1,0 +1,116 @@
+#!/bin/sh
+##
+# Worker instance enrypoint script.
+#   usage: "docker run --volumes-from <jarpack> hivemined/worker <java-arguments>"
+#
+#   All arguments passed to this script are forwarded to the underlying JRE.
+##
+
+# configuration and function definitions
+. /usr/local/etc/entrypoint.conf
+
+# cleanup on signal handling
+trap cleanup TERM INT QUIT HUP
+
+## main script execution function (called at bottom of script)
+main () {
+    init
+    run_server "$@"
+    cleanup
+}
+
+## launch the java server with piped input
+run_server () {
+    # launch redirected command
+    <"$FIFO" java -jar "$SERVER_JAR" "$@" nogui &
+    
+    is_running 'java' || sleep 1
+    
+    # pass commands through fifo until server exits
+    while is_running 'java'; do
+        read cmd
+        send_cmd "$cmd"
+    done
+}
+
+## perform cleanup procedure and then exit gracefully
+cleanup () {
+    # stop server gracefully
+    if is_running 'java$'; then
+        send_cmd "$CMD_STOP_SERVER"
+    fi
+
+    # clean fifo dummy processes
+    is_running "$PID_FIFO" && kill "$PID_FIFO"
+    is_running 'sleep' && kill $(ps -A | grep 'sleep' | awk '{print $1}')
+
+    exit 0
+}
+
+## perform initialization procedure
+init () {
+    # use MC_ROOT as the working directory
+    cd "$MC_ROOT"
+
+    # enforce proper file ownership for BIN_DIR
+    __chown_init "$BIN_DIR/"
+
+    # determine server jar locations
+    FORGE_JAR=$(ls ${BIN_DIR}/forge-*-universal.jar 2>/dev/null)
+    MC_JAR=$(ls ${BIN_DIR}/minecraft_server.*.jar 2>/dev/null)
+
+    # save main process PID
+    HOME_PID=$$
+
+    # initialize server files
+    if [ -e "$MC_JAR" ]; then
+        if [ -e "$FORGE_JAR" ]; then
+            SERVER_JAR="$FORGE_JAR"
+            __forge_init
+        else
+            SERVER_JAR="$MC_JAR"
+        fi
+    else
+        error "No valid Minecraft installation found!"
+    fi
+
+    # initialize server world, using tmpfs if possible
+    if tmpfs_exists; then
+        copy_dir "$WORLD_DISK" "$WORLD_RAM"
+        rm -f world && ln -s "$WORLD_RAM" world
+    else
+        test -h world || ln -s "$WORLD_DISK" world
+    fi
+
+    # initialize input pipe
+    test -p "$FIFO" || mkfifo "$FIFO"
+    while :; do sleep 99999 ; done >"$FIFO" &
+    PID_FIFO=$!
+}
+__forge_init () {
+    # create directories and initialize local configuration
+    if [ ! -d "$LOCAL_CFG" ]; then
+        mkdir -p "$LOCAL_CFG"
+        copy_dir "$FORGE_CFG" "$LOCAL_CFG"
+    fi
+
+    # create symlinks in working directory
+    test -h mods       || ln -s "$FORGE_MOD" mods
+    test -h config     || ln -s "$LOCAL_CFG" config
+}
+__chown_init () {
+    # strip absolute path from input (make relative to BIN_DIR)
+    local path="$(echo "$1" | sed "s-${BIN_DIR}--")"
+
+    # set file ownership
+    "$CHOWN_BIN" "$path"
+
+    # recurse into directories
+    if [ -d "$1" ]; then
+        for f in $(ls "$1"); do
+            __chown_init "$1/$f"
+        done
+    fi
+}
+
+main "$@"
